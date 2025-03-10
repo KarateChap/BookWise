@@ -4,6 +4,7 @@ import config from "@/lib/config";
 import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 const {
   env: {
@@ -42,10 +43,26 @@ const ImageUpload = ({
 
   const onError = (error: any) => {
     console.log(error);
+
+    toast.error("Image uploaded failed", {
+      description: `Your image could not be uploded. Pelase try again.`,
+      // action: {
+      //   label: "Undo",
+      //   onClick: () => console.log("Undo"),
+      // },
+    });
   };
   const onSuccess = (res: any) => {
     setFile(res);
     onFileChange(res.filePath);
+
+    toast("Image uploaded successfully", {
+      description: `${res.filePath} uploaded successfully.`,
+      // action: {
+      //   label: "Undo",
+      //   onClick: () => console.log("Undo"),
+      // },
+    });
   };
 
   return (
@@ -85,7 +102,14 @@ const ImageUpload = ({
         {file && <p className="upload-filename">{file.filePath}</p>}
       </button>
 
-      {file && <IKImage alt={file.filePath} width={500} height={500} />}
+      {file && (
+        <IKImage
+          path={file.filePath}
+          alt={file.filePath}
+          width={500}
+          height={500}
+        />
+      )}
     </ImageKitProvider>
   );
 };
